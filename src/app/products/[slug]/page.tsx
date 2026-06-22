@@ -66,10 +66,14 @@ export default async function ProductPage({ params }: Params) {
               <StoreIcon className="size-5" />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="font-semibold">Toko Resmi</p>
+              <p className="truncate font-semibold">{product.storeName ?? "Toko Resmi"}</p>
               <p className="text-xs text-muted-foreground">Terverifikasi</p>
             </div>
-            <Button variant="secondary" size="sm" className="rounded-full bg-background">Kunjungi</Button>
+            {product.storeSlug && (
+              <Button variant="secondary" size="sm" className="rounded-full bg-background" asChild>
+                <Link href={`/stores/${product.storeSlug}`}>Kunjungi</Link>
+              </Button>
+            )}
           </div>
 
           {/* Assurance */}

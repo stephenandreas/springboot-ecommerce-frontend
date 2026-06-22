@@ -17,10 +17,17 @@ const CATEGORIES = [
 
 const SKU = { skuId: "s1", name: "Default", price: 150000, stock: 10, weight: 500 };
 const PRODUCT = {
-  id: "p1", storeId: "store-1", sellerId: "seller-1", categoryId: "c1",
+  id: "p1", storeId: "store-1", storeName: "Toko E2E", storeSlug: "toko-e2e",
+  sellerId: "seller-1", categoryId: "c1",
   name: "Kaos E2E Premium", slug: "kaos-e2e-premium", description: "Produk uji e2e.",
   brand: "E2E", images: [], skus: [SKU], attributes: { Bahan: "Katun" },
   status: "ACTIVE", rating: 4.5, reviewCount: 8,
+};
+const STORE = {
+  id: "store-1", name: "Toko E2E", slug: "toko-e2e", description: "Toko uji e2e.",
+  logoUrl: null, bannerUrl: null, status: "ACTIVE", followerCount: 12,
+  city: "Jakarta", province: "DKI Jakarta", ratingAvg: 4.6, reviewCount: 20,
+  productCount: 2, totalSales: 50, isFollowing: false,
 };
 const FLASH = {
   ...PRODUCT, id: "p3", name: "Flash Deal E2E", slug: "flash-deal-e2e",
@@ -52,6 +59,7 @@ createServer(async (req, res) => {
   if (path === "/categories/tree") return send(res, 200, ok(CATEGORIES));
   if (path === "/products") return send(res, 200, paged(PRODUCTS));
   if (path === "/products/flash-sale") return send(res, 200, ok([FLASH]));
+  if (path.startsWith("/products/store/")) return send(res, 200, paged(PRODUCTS));
   if (path === "/products/search") return send(res, 200, paged(PRODUCTS));
   if (path.startsWith("/products/") && path.endsWith("/products")) return send(res, 200, paged(PRODUCTS));
   if (path.startsWith("/categories/") && path.endsWith("/products")) return send(res, 200, paged(PRODUCTS));
@@ -62,6 +70,9 @@ createServer(async (req, res) => {
   }
   if (path === "/auth/login") return send(res, 200, ok({ accessToken: fakeJwt("ROLE_CUSTOMER"), refreshToken: "r" }, "Berhasil"));
   if (path === "/auth/register") return send(res, 200, ok({ accessToken: fakeJwt("ROLE_CUSTOMER"), refreshToken: "r" }, "Berhasil"));
+  if (path === "/stores/following") return send(res, 200, paged([STORE]));
+  if (path.startsWith("/stores/") && path.endsWith("/follow")) return send(res, 200, ok({ following: true, followerCount: 13 }));
+  if (path.startsWith("/stores/")) return send(res, 200, ok(STORE));
   if (path === "/cart/items") return send(res, 200, ok(null));
   if (path.includes("/cart/items/") && path.endsWith("/select")) return send(res, 200, ok(null));
   if (path === "/orders/checkout") return send(res, 200, ok(ORDER, "Order created"));

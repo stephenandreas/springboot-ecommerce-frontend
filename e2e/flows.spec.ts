@@ -28,6 +28,20 @@ test.describe("Browsing (publik, server-rendered)", () => {
     await expect(page.getByText("-40%").first()).toBeVisible();
   });
 
+  test("profil toko menampilkan info + produk", async ({ page }) => {
+    await page.goto("/stores/toko-e2e");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Toko E2E");
+    await expect(page.getByRole("button", { name: /Ikuti/ })).toBeVisible();
+    await expect(page.getByText("Kaos E2E Premium").first()).toBeVisible();
+  });
+
+  test("tombol Kunjungi di detail menuju profil toko", async ({ page }) => {
+    await page.goto("/products/kaos-e2e-premium");
+    await page.getByRole("link", { name: "Kunjungi" }).click();
+    await expect(page).toHaveURL(/\/stores\/toko-e2e/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Toko E2E");
+  });
+
   test("detail produk menampilkan harga + CTA", async ({ page }) => {
     await page.goto("/products/kaos-e2e-premium");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Kaos E2E Premium");

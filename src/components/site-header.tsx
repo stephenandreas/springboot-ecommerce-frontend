@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShoppingBag, Search, User, LogOut, LayoutDashboard, Package } from "lucide-react";
+import { ShoppingBag, Search, User, LogOut, LayoutDashboard, Package, Store } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -77,6 +77,11 @@ export function SiteHeader() {
                 <DropdownMenuItem asChild>
                   <Link href="/orders">
                     <Package className="size-4" /> Pesanan
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/stores/following">
+                    <Store className="size-4" /> Toko Diikuti
                   </Link>
                 </DropdownMenuItem>
                 {(role === "ROLE_SELLER" || role === "ROLE_ADMIN") && (

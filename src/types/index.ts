@@ -38,9 +38,32 @@ export interface ProductImage {
   alt?: string | null;
 }
 
+export interface Store {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string | null;
+  logoUrl?: string | null;
+  bannerUrl?: string | null;
+  status: string;
+  followerCount: number;
+  province?: string | null;
+  city?: string | null;
+  originCity?: string | null;
+  originProvince?: string | null;
+  ratingAvg?: number;
+  reviewCount?: number;
+  productCount?: number;
+  totalSales?: number;
+  isFollowing?: boolean | null;
+  createdAt?: string;
+}
+
 export interface Product {
   id: string;
   storeId: string;
+  storeName?: string | null;
+  storeSlug?: string | null;
   sellerId: string;
   categoryId: string;
   name: string;
