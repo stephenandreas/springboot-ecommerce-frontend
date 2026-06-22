@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShoppingCart, Search, Store, User, LogOut, LayoutDashboard, Package, HelpCircle } from "lucide-react";
+import { ShoppingBag, Search, User, LogOut, LayoutDashboard, Package } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,45 +29,34 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="hidden border-b bg-muted/40 md:block">
-        <div className="mx-auto flex h-8 max-w-7xl items-center justify-between px-4 text-xs text-muted-foreground">
-          <span>Marketplace ditenagai Spring Boot</span>
-          <nav className="flex items-center gap-4">
-            <Link href="/seller" className="hover:text-foreground">Jadi Penjual</Link>
-            <Link href="/orders" className="hover:text-foreground">Lacak Pesanan</Link>
-            <Link href="/" className="inline-flex items-center gap-1 hover:text-foreground">
-              <HelpCircle className="size-3.5" /> Bantuan
-            </Link>
-          </nav>
-        </div>
-      </div>
-
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4">
-        <Link href="/" className="flex shrink-0 items-center gap-2 font-bold">
-          <span className="brand-gradient grid size-8 place-items-center rounded-lg text-white">
-            <Store className="size-4" />
-          </span>
-          <span className="hidden text-lg sm:inline">SpringCommerce</span>
+    <header className="sticky top-0 z-40 bg-background/90 backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4">
+        <Link href="/" className="text-xl font-black uppercase tracking-tight">
+          SC
         </Link>
 
-        <form onSubmit={onSearch} className="relative flex-1 md:mx-2" role="search">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-          <Input
-            name="q"
-            placeholder="Cari produk, merek, atau toko…"
-            className="h-10 rounded-full border-2 pl-10 focus-visible:border-primary"
-            aria-label="Cari produk"
-          />
+        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+          <Link href="/search" className="hover:opacity-60">Baru</Link>
+          <Link href="/search" className="hover:opacity-60">Pria</Link>
+          <Link href="/search" className="hover:opacity-60">Wanita</Link>
+          <Link href="/seller" className="hover:opacity-60">Jual</Link>
+        </nav>
+
+        <form onSubmit={onSearch} className="relative ml-auto hidden w-64 sm:block" role="search">
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
+          <Input name="q" placeholder="Cari" className="h-9 rounded-full border-0 bg-muted pl-9" aria-label="Cari produk" />
         </form>
 
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-0.5 sm:ml-0 ml-auto">
+          <Button variant="ghost" size="icon" aria-label="Cari" className="sm:hidden" render={<Link href="/search" />}>
+            <Search className="size-5" />
+          </Button>
           <Button variant="ghost" size="icon" aria-label="Keranjang" className="relative" render={<Link href="/cart" />}>
-            <ShoppingCart className="size-5" />
+            <ShoppingBag className="size-5" />
             {count > 0 && (
-              <Badge className="absolute -right-1 -top-1 size-5 justify-center rounded-full p-0 text-[10px] tabular-nums">
-                {count > 9 ? "9+" : count}
-              </Badge>
+              <span className="absolute right-1 top-1 grid size-4 place-items-center rounded-full bg-primary text-[9px] font-semibold text-primary-foreground tabular-nums">
+                {count > 9 ? "9" : count}
+              </span>
             )}
           </Button>
 
@@ -78,17 +66,14 @@ export function SiteHeader() {
                 <User className="size-5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">
-                  Masuk sebagai<br />
-                  <span className="text-sm font-medium text-foreground">{email}</span>
-                </DropdownMenuLabel>
+                <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">{email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem render={<Link href="/orders" />}>
-                  <Package className="size-4" /> Pesanan Saya
+                  <Package className="size-4" /> Pesanan
                 </DropdownMenuItem>
                 {(role === "ROLE_SELLER" || role === "ROLE_ADMIN") && (
                   <DropdownMenuItem render={<Link href="/seller" />}>
-                    <LayoutDashboard className="size-4" /> Dashboard Penjual
+                    <LayoutDashboard className="size-4" /> Dashboard
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
@@ -98,8 +83,8 @@ export function SiteHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button size="sm" className="hidden sm:inline-flex" render={<Link href="/login" />}>
-              Masuk
+            <Button variant="ghost" size="icon" aria-label="Masuk" render={<Link href="/login" />}>
+              <User className="size-5" />
             </Button>
           )}
         </nav>

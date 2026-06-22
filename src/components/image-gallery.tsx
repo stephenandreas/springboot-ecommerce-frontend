@@ -12,7 +12,7 @@ export function ImageGallery({ images, alt }: { images: string[]; alt: string })
 
   return (
     <div className="space-y-3">
-      <div className="relative aspect-square overflow-hidden rounded-xl border bg-muted">
+      <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted">
         {list.length ? (
           <Image
             src={list[active]}

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-12 border-t bg-muted/30">
+    <footer className="mt-12 bg-muted/40">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
         <div>
           <p className="font-semibold">SpringCommerce</p>
@@ -14,8 +14,8 @@ export function SiteFooter() {
         <FooterCol title="Penjual" links={[["Jadi Penjual", "/seller"], ["Dashboard", "/seller"]]} />
         <FooterCol title="Akun" links={[["Masuk", "/login"], ["Daftar", "/register"], ["Pesanan", "/orders"]]} />
       </div>
-      <div className="border-t py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} SpringCommerce. Dibangun dengan Next.js + shadcn/ui.
+      <div className="py-4 text-center text-xs text-muted-foreground">
+        © {new Date().getFullYear()} SpringCommerce
       </div>
     </footer>
   );

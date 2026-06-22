@@ -47,7 +47,7 @@ export function AddToCart({ product, storeName }: { product: Product; storeName?
   }
 
   return (
-    <div className="rounded-xl border bg-card p-5">
+    <div>
       <PriceTag price={Number(sku?.price ?? 0)} size="lg" />
 
       {skus.length > 1 && (
@@ -67,8 +67,8 @@ export function AddToCart({ product, storeName }: { product: Product; storeName?
                     setQty(1);
                   }}
                   className={cn(
-                    "rounded-lg border px-3 py-1.5 text-sm transition-colors",
-                    selected ? "border-primary bg-primary/5 font-medium text-primary" : "hover:border-foreground/40",
+                    "rounded-full px-4 py-1.5 text-sm transition-colors",
+                    selected ? "bg-primary font-medium text-primary-foreground" : "bg-muted hover:bg-muted/70",
                     oos && "cursor-not-allowed opacity-40 line-through",
                   )}
                 >
@@ -83,8 +83,8 @@ export function AddToCart({ product, storeName }: { product: Product; storeName?
       <div className="mt-5">
         <p className="mb-2 text-sm font-medium">Jumlah</p>
         <div className="flex items-center gap-3">
-          <div className="inline-flex items-center rounded-lg border">
-            <Button type="button" variant="ghost" size="icon" className="size-9 rounded-r-none" onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={qty <= 1} aria-label="Kurangi">
+          <div className="inline-flex items-center rounded-full bg-muted">
+            <Button type="button" variant="ghost" size="icon" className="size-9 rounded-full" onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={qty <= 1} aria-label="Kurangi">
               <Minus className="size-4" />
             </Button>
             <span className="w-12 text-center text-sm font-medium tabular-nums">{qty}</span>
@@ -98,12 +98,12 @@ export function AddToCart({ product, storeName }: { product: Product; storeName?
         </div>
       </div>
 
-      <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-        <Button variant="outline" size="lg" className="flex-1 border-primary text-primary hover:bg-primary/5" onClick={addToCart} disabled={outOfStock}>
-          <ShoppingCart className="size-4" /> Keranjang
-        </Button>
-        <Button size="lg" className="flex-1" onClick={buyNow} disabled={outOfStock}>
+      <div className="mt-6 flex flex-col gap-2">
+        <Button size="lg" className="h-12 w-full rounded-full text-base" onClick={buyNow} disabled={outOfStock}>
           Beli Sekarang
+        </Button>
+        <Button variant="secondary" size="lg" className="h-12 w-full rounded-full bg-muted text-base hover:bg-muted/70" onClick={addToCart} disabled={outOfStock}>
+          <ShoppingCart className="size-4" /> Tambah ke Keranjang
         </Button>
       </div>
     </div>

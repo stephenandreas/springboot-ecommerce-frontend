@@ -44,6 +44,11 @@ npm run lint
 
 Pastikan backend springboot-ecommerce berjalan di `NEXT_PUBLIC_API_BASE_URL`.
 
+## Testing
+
+- **Unit & integrasi** (Vitest + Testing Library, jsdom): `npm test` (atau `npm run test:cov` untuk coverage). Mencakup `lib` (api, format, auth, cart) dan komponen/halaman flow (ProductCard, PriceTag, StarRating, buy box, cart, login, register).
+- **E2E / UI-UX** (Playwright, mock backend di `e2e/mock-server.mjs`): `npm run e2e`. Menguji semua flow (browsing, search, detail, keranjang, checkout, auth, pesanan, proteksi seller, responsif mobile). Di CI jalankan `npx playwright install --with-deps chromium` lebih dulu (butuh lib sistem browser).
+
 ## Struktur
 
 ```

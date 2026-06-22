@@ -1,0 +1,57 @@
+import { describe, it, expect, beforeEach } from "vitest";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { Toaster } from "@/components/ui/sonner";
+import { CartProvider } from "@/lib/cart-context";
+import { ProductCard } from "./product-card";
+import type { Product } from "@/types";
+
+const product: Product = {
+  id: "p1",
+  storeId: "store-1",
+  sellerId: "seller-1",
+  categoryId: "c1",
+  name: "Kaos Polos Premium",
+  slug: "kaos-polos-premium",
+  brand: "E2E",
+  images: [],
+  skus: [{ skuId: "s1", name: "M", price: 120000, stock: 10 }],
+  status: "ACTIVE",
+  rating: 4.5,
+  reviewCount: 8,
+};
+
+function renderCard(p: Product = product) {
+  return render(
+    <CartProvider>
+      <ProductCard product={p} />
+      <Toaster />
+    </CartProvider>,
+  );
+}
+
+beforeEach(() => localStorage.clear());
+
+describe("ProductCard", () => {
+  it("renders name, price and a link to the detail page", () => {
+    renderCard();
+    expect(screen.getByText("Kaos Polos Premium")).toBeInTheDocument();
+    expect(screen.getByText(/120\.000/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Kaos Polos Premium" })).toHaveAttribute(
+      "href",
+      "/products/kaos-polos-premium",
+    );
+  });
+
+  it("quick-adds to the cart", async () => {
+    renderCard();
+    await userEvent.click(screen.getByRole("button", { name: "Tambah ke keranjang" }));
+    expect(localStorage.getItem("sc_cart")).toContain("s1");
+  });
+
+  it("marks out-of-stock products and hides the add button", () => {
+    renderCard({ ...product, skus: [{ skuId: "s1", name: "M", price: 120000, stock: 0 }] });
+    expect(screen.getByText("Habis")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Tambah ke keranjang" })).not.toBeInTheDocument();
+  });
+});

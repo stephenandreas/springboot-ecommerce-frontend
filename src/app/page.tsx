@@ -1,23 +1,9 @@
 import Link from "next/link";
-import {
-  Zap,
-  Sparkles,
-  TrendingUp,
-  Truck,
-  ShieldCheck,
-  RotateCcw,
-  Headphones,
-  Smartphone,
-  Shirt,
-  Home as HomeIcon,
-  Tag,
-  ChevronRight,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { ProductCard } from "@/components/product-card";
 import { EmptyState } from "@/components/empty-state";
-import { SectionHeader } from "@/components/section-header";
-import { CountdownTimer } from "@/components/countdown-timer";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { getProducts } from "@/lib/products";
 import { getCategories } from "@/lib/categories";
 import type { Category, Product } from "@/types";
@@ -25,47 +11,40 @@ import type { Category, Product } from "@/types";
 export default async function HomePage() {
   const [page, categories] = await Promise.all([getProducts({ size: 30 }), getCategories()]);
   const products = page.content;
-  const flash = products.slice(0, 6);
-  const latest = products;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-5">
+    <div>
       <Hero />
-      <TrustStrip />
-      {categories.length > 0 && <CategoryShowcase categories={categories} />}
+      <Marquee />
 
-      {flash.length > 0 && (
-        <section className="overflow-hidden rounded-2xl bg-card p-4 ring-1 ring-foreground/8 sm:p-5">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 rounded-lg bg-primary px-2.5 py-1.5 font-bold text-primary-foreground">
-                <Zap className="size-4 fill-current" /> Flash Sale
-              </span>
-              <CountdownTimer windowHours={4} />
-            </div>
-            <Link href="/" className="flex items-center gap-0.5 text-sm font-medium text-primary hover:underline">
-              Lihat semua <ChevronRight className="size-4" />
-            </Link>
-          </div>
-          <div className="no-scrollbar -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
-            {flash.map((p) => (
-              <div key={p.id} className="w-40 shrink-0 sm:w-44">
-                <ProductCard product={p} />
-              </div>
+      {categories.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-12">
+          <Reveal>
+            <h2 className="mb-6 text-2xl font-bold uppercase tracking-tight">Jelajahi</h2>
+          </Reveal>
+          <Stagger className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {categories.slice(0, 8).map((c) => (
+              <StaggerItem key={c.id}>
+                <CategoryTile category={c} />
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </section>
       )}
 
-      <section>
-        <SectionHeader title="Produk Terbaru" subtitle="Baru ditambahkan para penjual" icon={Sparkles} accent href="/" />
-        {latest.length === 0 ? (
-          <EmptyState
-            title="Belum ada produk"
-            description="Pastikan backend berjalan di NEXT_PUBLIC_API_BASE_URL dan memiliki produk aktif."
-          />
+      <section id="produk" className="mx-auto max-w-7xl px-4 py-12">
+        <Reveal>
+          <div className="mb-6 flex items-end justify-between">
+            <h2 className="text-2xl font-bold uppercase tracking-tight">Baru</h2>
+            <Link href="/search" className="flex items-center gap-1 text-sm font-medium hover:underline">
+              Semua <ArrowRight className="size-4" />
+            </Link>
+          </div>
+        </Reveal>
+        {products.length === 0 ? (
+          <EmptyState title="Belum ada produk" description="Pastikan backend aktif dan punya produk." />
         ) : (
-          <ProductGrid products={latest} />
+          <ProductGrid products={products} />
         )}
       </section>
     </div>
@@ -74,110 +53,68 @@ export default async function HomePage() {
 
 function Hero() {
   return (
-    <section className="grid gap-4 lg:grid-cols-[1fr_320px]">
-      <div className="brand-gradient relative overflow-hidden rounded-2xl p-8 text-white md:p-12">
-        <div className="absolute -right-10 -top-10 size-48 rounded-full bg-white/10" />
-        <div className="absolute -bottom-16 right-20 size-56 rounded-full bg-white/10" />
-        <div className="relative max-w-lg">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-medium backdrop-blur">
-            <Sparkles className="size-3.5" /> Marketplace #1 ditenagai Spring Boot
-          </span>
-          <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight md:text-4xl">
-            Belanja hemat dari ribuan penjual terpercaya
+    <section className="brand-gradient relative overflow-hidden text-white">
+      <div className="mx-auto flex min-h-[72vh] max-w-7xl flex-col justify-end px-4 pb-16 pt-24">
+        <Reveal>
+          <p className="text-sm font-medium uppercase tracking-[0.2em] text-white/70">SpringCommerce</p>
+        </Reveal>
+        <Reveal delay={0.08}>
+          <h1 className="mt-3 max-w-3xl text-5xl font-black uppercase leading-[0.95] tracking-tight md:text-8xl">
+            Gaya baru.
+            <br />
+            Setiap hari.
           </h1>
-          <p className="mt-3 text-white/85">Gratis ongkir, 100% original, dan pembayaran aman.</p>
-          <Link
-            href="#produk"
-            className="mt-6 inline-flex items-center gap-1 rounded-lg bg-white px-5 py-2.5 font-semibold text-foreground transition-transform hover:-translate-y-0.5"
-          >
-            Mulai Belanja <ChevronRight className="size-4" />
-          </Link>
-        </div>
-      </div>
-      <div className="hidden flex-col gap-4 lg:flex">
-        <PromoTile title="Voucher Diskon" subtitle="Hingga 50% setiap hari" icon={Tag} />
-        <PromoTile title="Top-Up & Tagihan" subtitle="Cepat & otomatis" icon={Smartphone} />
+        </Reveal>
+        <Reveal delay={0.16}>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="#produk" className="rounded-full bg-white px-7 py-3 text-sm font-medium text-foreground transition-transform hover:scale-105">
+              Belanja
+            </Link>
+            <Link href="/search" className="rounded-full border border-white/40 px-7 py-3 text-sm font-medium transition-colors hover:bg-white/10">
+              Jelajahi
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-function PromoTile({ title, subtitle, icon: Icon }: { title: string; subtitle: string; icon: React.ComponentType<{ className?: string }> }) {
+function Marquee() {
+  const items = ["Gratis Ongkir", "100% Original", "Retur 7 Hari", "Bayar Aman"];
   return (
-    <div className="flex flex-1 items-center gap-3 rounded-2xl bg-card p-5 ring-1 ring-foreground/8">
-      <span className="grid size-11 place-items-center rounded-xl bg-primary/10 text-primary">
-        <Icon className="size-5" />
-      </span>
-      <div>
-        <p className="font-semibold">{title}</p>
-        <p className="text-sm text-muted-foreground">{subtitle}</p>
+    <div className="bg-primary py-3 text-primary-foreground">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-8 gap-y-1 px-4 text-xs font-medium uppercase tracking-wide">
+        {items.map((t) => (
+          <span key={t}>{t}</span>
+        ))}
       </div>
     </div>
   );
 }
 
-const BENEFITS = [
-  { icon: Truck, title: "Gratis Ongkir", desc: "Min. belanja tertentu" },
-  { icon: ShieldCheck, title: "100% Original", desc: "Jaminan keaslian" },
-  { icon: RotateCcw, title: "Mudah Retur", desc: "Garansi 7 hari" },
-  { icon: Headphones, title: "Dukungan 24/7", desc: "Selalu siap membantu" },
-];
-
-function TrustStrip() {
+function CategoryTile({ category }: { category: Category }) {
   return (
-    <section className="grid grid-cols-2 gap-3 rounded-2xl bg-card p-4 ring-1 ring-foreground/8 md:grid-cols-4">
-      {BENEFITS.map((b) => (
-        <div key={b.title} className="flex items-center gap-3">
-          <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
-            <b.icon className="size-5" />
-          </span>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold">{b.title}</p>
-            <p className="truncate text-xs text-muted-foreground">{b.desc}</p>
-          </div>
-        </div>
-      ))}
-    </section>
-  );
-}
-
-const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  electronics: Smartphone,
-  fashion: Shirt,
-  home: HomeIcon,
-};
-
-function CategoryShowcase({ categories }: { categories: Category[] }) {
-  return (
-    <section>
-      <SectionHeader title="Kategori Pilihan" icon={TrendingUp} />
-      <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-        {categories.slice(0, 16).map((c) => {
-          const Icon = CATEGORY_ICONS[c.slug] ?? Tag;
-          return (
-            <Link
-              key={c.id}
-              href={`/categories/${c.slug}`}
-              className="flex flex-col items-center gap-2 rounded-xl bg-card p-3 text-center ring-1 ring-foreground/8 transition-all hover:-translate-y-0.5 hover:ring-primary/40"
-            >
-              <span className="grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
-                <Icon className="size-5" />
-              </span>
-              <span className="line-clamp-2 text-xs font-medium">{c.name}</span>
-            </Link>
-          );
-        })}
-      </div>
-    </section>
+    <Link
+      href={`/categories/${category.slug}`}
+      className="group relative flex aspect-[4/3] flex-col justify-end overflow-hidden bg-muted p-5 transition-colors hover:bg-primary hover:text-primary-foreground"
+    >
+      <span className="text-lg font-bold uppercase tracking-tight">{category.name}</span>
+      <span className="mt-1 flex items-center gap-1 text-sm">
+        Belanja <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+      </span>
+    </Link>
   );
 }
 
 function ProductGrid({ products }: { products: Product[] }) {
   return (
-    <div id="produk" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <Stagger className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
       {products.map((p) => (
-        <ProductCard key={p.id} product={p} />
+        <StaggerItem key={p.id}>
+          <ProductCard product={p} />
+        </StaggerItem>
       ))}
-    </div>
+    </Stagger>
   );
 }

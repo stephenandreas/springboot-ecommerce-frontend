@@ -64,19 +64,19 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.672 0.196 38.5);
+  --primary: oklch(0.145 0 0);
   --primary-foreground: oklch(0.995 0 0);
-  --sale: oklch(0.617 0.226 27.3);
+  --sale: oklch(0.587 0.235 27.3);
   --sale-foreground: oklch(0.995 0 0);
-  --success: oklch(0.63 0.16 150);
+  --success: oklch(0.6 0.16 150);
   --success-foreground: oklch(0.995 0 0);
-  --warning: oklch(0.79 0.15 78);
-  --warning-foreground: oklch(0.27 0.04 60);
-  --rating: oklch(0.8 0.16 80);
-  --brand-from: oklch(0.7 0.2 42);
-  --brand-to: oklch(0.64 0.23 28);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --warning: oklch(0.72 0.16 60);
+  --warning-foreground: oklch(0.995 0 0);
+  --rating: oklch(0.18 0 0);
+  --brand-from: oklch(0.21 0 0);
+  --brand-to: oklch(0.04 0 0);
+  --secondary: oklch(0.96 0 0);
+  --secondary-foreground: oklch(0.145 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
@@ -108,17 +108,17 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.7 0.19 40);
-  --primary-foreground: oklch(0.205 0 0);
-  --sale: oklch(0.67 0.21 27);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.145 0 0);
+  --sale: oklch(0.65 0.22 27);
   --sale-foreground: oklch(0.995 0 0);
   --success: oklch(0.7 0.15 152);
   --success-foreground: oklch(0.16 0.02 150);
-  --warning: oklch(0.82 0.15 80);
-  --warning-foreground: oklch(0.25 0.04 60);
-  --rating: oklch(0.83 0.16 82);
-  --brand-from: oklch(0.72 0.2 44);
-  --brand-to: oklch(0.66 0.22 28);
+  --warning: oklch(0.8 0.15 70);
+  --warning-foreground: oklch(0.2 0.02 60);
+  --rating: oklch(0.985 0 0);
+  --brand-from: oklch(0.32 0 0);
+  --brand-to: oklch(0.1 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -149,7 +149,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-muted/40 text-foreground;
+    @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
   }
   html {

@@ -61,24 +61,24 @@ export default async function ProductPage({ params }: Params) {
           <AddToCart product={product} />
 
           {/* Store card */}
-          <div className="flex items-center gap-3 rounded-xl border bg-card p-4">
-            <span className="brand-gradient grid size-12 place-items-center rounded-full text-white">
+          <div className="flex items-center gap-3 rounded-2xl bg-muted/50 p-4">
+            <span className="grid size-12 place-items-center rounded-full bg-primary text-primary-foreground">
               <StoreIcon className="size-5" />
             </span>
             <div className="min-w-0 flex-1">
               <p className="font-semibold">Toko Resmi</p>
-              <p className="text-xs text-muted-foreground">Penjual terverifikasi</p>
+              <p className="text-xs text-muted-foreground">Terverifikasi</p>
             </div>
-            <Button variant="outline" size="sm">Kunjungi</Button>
+            <Button variant="secondary" size="sm" className="rounded-full bg-background">Kunjungi</Button>
           </div>
 
           {/* Assurance */}
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="flex items-center gap-2 rounded-lg border bg-card p-3">
-              <Truck className="size-4 text-primary" /> <span>Gratis ongkir tersedia</span>
+            <div className="flex items-center gap-2 rounded-2xl bg-muted/50 p-3">
+              <Truck className="size-4" /> <span>Gratis ongkir</span>
             </div>
-            <div className="flex items-center gap-2 rounded-lg border bg-card p-3">
-              <ShieldCheck className="size-4 text-primary" /> <span>Jaminan 100% original</span>
+            <div className="flex items-center gap-2 rounded-2xl bg-muted/50 p-3">
+              <ShieldCheck className="size-4" /> <span>100% original</span>
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@ export default async function ProductPage({ params }: Params) {
           </TabsContent>
           <TabsContent value="spec" className="pt-4">
             {Object.keys(attributes).length ? (
-              <dl className="max-w-lg divide-y rounded-lg border">
+              <dl className="max-w-lg divide-y overflow-hidden rounded-2xl bg-muted/40">
                 {Object.entries(attributes).map(([k, v]) => (
                   <div key={k} className="flex gap-4 px-4 py-2.5 text-sm">
                     <dt className="w-40 shrink-0 capitalize text-muted-foreground">{k}</dt>

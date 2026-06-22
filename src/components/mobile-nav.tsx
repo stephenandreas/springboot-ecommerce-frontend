@@ -22,7 +22,7 @@ export function MobileNav() {
   if (pathname.startsWith("/seller")) return null;
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 backdrop-blur md:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 bg-background/95 backdrop-blur [box-shadow:0_-1px_0_var(--muted)] md:hidden">
       <div className="mx-auto flex max-w-md items-stretch justify-around">
         {TABS.map(({ href, label, icon: Icon, badge }) => {
           const active = href === "/" ? pathname === "/" : pathname.startsWith(href);

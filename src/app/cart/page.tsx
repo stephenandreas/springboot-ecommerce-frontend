@@ -60,7 +60,7 @@ export default function CartPage() {
                         <Button variant="ghost" size="icon" className="size-7 text-muted-foreground" onClick={() => remove(l.skuId)} aria-label="Hapus">
                           <Trash2 className="size-4" />
                         </Button>
-                        <div className="inline-flex items-center rounded-md border">
+                        <div className="inline-flex items-center rounded-full bg-muted">
                           <Button variant="ghost" size="icon" className="size-7" onClick={() => setQty(l.skuId, l.quantity - 1)} aria-label="Kurangi">
                             <Minus className="size-3.5" />
                           </Button>
