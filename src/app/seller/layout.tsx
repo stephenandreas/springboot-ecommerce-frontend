@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Package, ClipboardList } from "lucide-react";
+import { LayoutDashboard, Package, ClipboardList, Store } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
@@ -12,6 +12,7 @@ const NAV = [
   { href: "/seller", label: "Dashboard", icon: LayoutDashboard },
   { href: "/seller/products", label: "Produk", icon: Package },
   { href: "/seller/orders", label: "Pesanan", icon: ClipboardList },
+  { href: "/seller/store", label: "Toko", icon: Store },
 ];
 
 export default function SellerLayout({ children }: { children: React.ReactNode }) {
@@ -33,7 +34,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
         <p className="px-3 pb-2 text-xs font-semibold uppercase text-muted-foreground">Penjual</p>
         <nav className="flex gap-1 md:flex-col">
           {NAV.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href;
+            const active = href === "/seller" ? pathname === "/seller" : pathname.startsWith(href);
             return (
               <Link
                 key={href}

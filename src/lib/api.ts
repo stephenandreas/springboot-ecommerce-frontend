@@ -73,3 +73,29 @@ export async function apiFetch<T>(path: string, opts: FetchOptions = {}): Promis
 
   return payload.data;
 }
+
+/** Multipart upload (images). Sends FormData with the bearer token; unwraps ApiResponse.data. */
+export async function apiUpload<T>(path: string, formData: FormData, token: string): Promise<T> {
+  const url = `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+      cache: "no-store",
+    });
+  } catch {
+    throw new ApiError("Tidak bisa terhubung ke server. Coba lagi.", 0);
+  }
+  let payload: ApiResponse<T> | null = null;
+  try {
+    payload = (await res.json()) as ApiResponse<T>;
+  } catch {
+    // non-JSON
+  }
+  if (!res.ok || !payload?.success) {
+    throw new ApiError(payload?.message ?? `Upload gagal (${res.status}).`, res.status);
+  }
+  return payload.data;
+}

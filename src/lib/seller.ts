@@ -1,5 +1,42 @@
-import { apiFetch } from "@/lib/api";
-import type { PagedResponse, Product, SubOrder } from "@/types";
+import { apiFetch, apiUpload } from "@/lib/api";
+import type { PagedResponse, Product, Store, SubOrder } from "@/types";
+
+export interface SkuInput {
+  name: string;
+  price: number;
+  stock: number;
+  weight?: number;
+  discountPrice?: number | null;
+  discountStartsAt?: string | null;
+  discountEndsAt?: string | null;
+}
+export interface ProductInput {
+  name: string;
+  description?: string;
+  brand?: string;
+  categoryId: string;
+  skus: SkuInput[];
+}
+export interface ProductPatch {
+  name?: string;
+  description?: string;
+  brand?: string;
+  categoryId?: string;
+}
+export interface SkuPatch {
+  price?: number;
+  stock?: number;
+  discountPrice?: number | null;
+  discountStartsAt?: string | null;
+  discountEndsAt?: string | null;
+}
+export interface StoreInput {
+  name: string;
+  description?: string;
+  originCity?: string;
+  originProvince?: string;
+  originAddress?: string;
+}
 
 export interface SellerBalance {
   balance?: number;
@@ -33,4 +70,60 @@ export function shipSubOrder(subOrderId: string, trackingNumber: string, token: 
     token,
     body: { trackingNumber },
   });
+}
+
+// ---- Product management ----
+export function createProduct(input: ProductInput, token: string): Promise<Product> {
+  return apiFetch<Product>("/products", { method: "POST", token, body: input });
+}
+export function updateProduct(id: string, patch: ProductPatch, token: string): Promise<Product> {
+  return apiFetch<Product>(`/products/${id}`, { method: "PUT", token, body: patch });
+}
+export function deleteProduct(id: string, token: string): Promise<void> {
+  return apiFetch<void>(`/products/${id}`, { method: "DELETE", token });
+}
+export function publishProduct(id: string, token: string): Promise<Product> {
+  return apiFetch<Product>(`/products/${id}/publish`, { method: "PUT", token });
+}
+export function unpublishProduct(id: string, token: string): Promise<Product> {
+  return apiFetch<Product>(`/products/${id}/unpublish`, { method: "PATCH", token });
+}
+export function updateSku(productId: string, skuId: string, patch: SkuPatch, token: string): Promise<Product> {
+  return apiFetch<Product>(`/products/${productId}/skus/${skuId}`, { method: "PUT", token, body: patch });
+}
+
+// ---- Images ----
+export async function uploadImage(file: File, token: string): Promise<string> {
+  const fd = new FormData();
+  fd.append("file", file);
+  const res = await apiUpload<{ url: string; filename: string }>("/upload/image", fd, token);
+  return res.url;
+}
+export function addProductImage(productId: string, url: string, isPrimary: boolean, token: string): Promise<Product> {
+  return apiFetch<Product>(`/products/${productId}/images`, {
+    method: "POST",
+    token,
+    body: { url, isPrimary, altText: null },
+  });
+}
+
+// ---- Store management ----
+export function getMyStore(token: string): Promise<Store> {
+  return apiFetch<Store>("/stores/me", { token });
+}
+export function applyStore(input: StoreInput, token: string): Promise<Store> {
+  return apiFetch<Store>("/stores/apply", { method: "POST", token, body: input });
+}
+export function updateStore(input: StoreInput, token: string): Promise<Store> {
+  return apiFetch<Store>("/stores/me", { method: "PUT", token, body: input });
+}
+export function uploadStoreLogo(file: File, token: string): Promise<Store> {
+  const fd = new FormData();
+  fd.append("file", file);
+  return apiUpload<Store>("/stores/me/logo", fd, token);
+}
+export function uploadStoreBanner(file: File, token: string): Promise<Store> {
+  const fd = new FormData();
+  fd.append("file", file);
+  return apiUpload<Store>("/stores/me/banner", fd, token);
 }
