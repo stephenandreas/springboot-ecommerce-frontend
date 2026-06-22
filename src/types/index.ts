@@ -189,6 +189,37 @@ export interface Address {
   isDefault: boolean;
 }
 
+export interface Review {
+  id: string;
+  productId: string;
+  buyerName: string;
+  rating: number;
+  comment?: string | null;
+  verifiedPurchase: boolean;
+  sellerReply?: string | null;
+  sellerReplyAt?: string | null;
+  helpfulCount: number;
+}
+
+export interface ProductRating {
+  avg: number;
+  count: number;
+}
+
+export type VoucherType = "PERCENTAGE" | "FIXED";
+export interface Voucher {
+  id: string;
+  code: string;
+  type: VoucherType;
+  value: number;
+  minOrderAmount?: number | null;
+  maxDiscount?: number | null;
+  usageLimit: number;
+  usedCount: number;
+  validFrom?: string | null;
+  validUntil?: string | null;
+}
+
 export type Role = "ROLE_CUSTOMER" | "ROLE_SELLER" | "ROLE_ADMIN";
 
 export interface AuthTokens {

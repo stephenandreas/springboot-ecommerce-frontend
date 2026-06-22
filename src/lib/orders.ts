@@ -15,6 +15,7 @@ export interface CheckoutInput {
   shippingProvince?: string;
   shippingPostalCode: string;
   notes?: string;
+  storeVoucherCode?: string;
   storeShippings: StoreShippingInput[];
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -26,6 +27,7 @@ export default function CheckoutPage() {
   const groups = byStore();
 
   const [couriers, setCouriers] = useState<Record<string, string>>({});
+  const [voucher, setVoucher] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     shippingName: "",
@@ -60,7 +62,7 @@ export default function CheckoutPage() {
         courierName: couriers[g.storeId] ?? "JNE",
         courierService: "REG",
       }));
-      const order = await checkout({ ...form, storeShippings }, token);
+      const order = await checkout({ ...form, storeVoucherCode: voucher.trim() || undefined, storeShippings }, token);
       await initiatePayment(order.id, token).catch(() => undefined);
       clear();
       toast.success("Pesanan dibuat", { description: "Lanjutkan pembayaran di halaman pesanan." });
@@ -131,6 +133,19 @@ export default function CheckoutPage() {
                 <span>{formatIDR(subtotal)}</span>
               </div>
               <p className="text-xs text-muted-foreground">Ongkir final dihitung server saat pesanan dibuat.</p>
+              <Separator />
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium">Kode Voucher</label>
+                <Input
+                  value={voucher}
+                  onChange={(e) => setVoucher(e.target.value.toUpperCase())}
+                  placeholder="Masukkan kode"
+                  className="uppercase"
+                />
+                <Link href="/vouchers" target="_blank" className="text-xs text-primary hover:underline">
+                  Lihat voucher tersedia
+                </Link>
+              </div>
               <Separator />
               <Button type="submit" className="w-full" disabled={submitting}>
                 {submitting ? "Memproses…" : "Buat Pesanan"}

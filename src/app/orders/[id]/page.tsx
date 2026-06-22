@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OrderStatusBadge } from "@/components/order-status-badge";
+import { WriteReviewDialog } from "@/components/write-review-dialog";
 import { useAuth } from "@/lib/auth-context";
 import { getOrder, initiatePayment, confirmReceived } from "@/lib/orders";
 import { formatIDR } from "@/lib/format";
@@ -92,6 +93,11 @@ export default function OrderDetailPage() {
                     <div className="min-w-0 flex-1">
                       <p className="line-clamp-1 text-sm">{it.productName}</p>
                       <p className="text-xs text-muted-foreground">{it.skuName} · ×{it.quantity}</p>
+                      {order.status === "COMPLETED" && token && (
+                        <div className="mt-1.5">
+                          <WriteReviewDialog productId={it.productId} productName={it.productName} orderId={order.id} token={token} />
+                        </div>
+                      )}
                     </div>
                     <span className="text-sm font-medium">{formatIDR(it.subtotal)}</span>
                   </li>

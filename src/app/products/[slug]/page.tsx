@@ -7,6 +7,7 @@ import { AddToCart } from "@/components/add-to-cart";
 import { ImageGallery } from "@/components/image-gallery";
 import { ProductCard } from "@/components/product-card";
 import { StarRating } from "@/components/star-rating";
+import { ProductReviews } from "@/components/product-reviews";
 import { SectionHeader } from "@/components/section-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -116,16 +117,7 @@ export default async function ProductPage({ params }: Params) {
             )}
           </TabsContent>
           <TabsContent value="review" className="pt-4">
-            <div className="flex items-center gap-3">
-              <span className="text-3xl font-bold">{(product.rating ?? 0).toFixed(1)}</span>
-              <div>
-                <StarRating value={product.rating ?? 0} showValue={false} size="md" />
-                <p className="text-xs text-muted-foreground">{product.reviewCount ?? 0} ulasan</p>
-              </div>
-            </div>
-            {(product.reviewCount ?? 0) === 0 && (
-              <p className="mt-4 text-sm text-muted-foreground">Belum ada ulasan. Jadilah yang pertama setelah membeli.</p>
-            )}
+            <ProductReviews productId={product.id} />
           </TabsContent>
         </Tabs>
       </div>
