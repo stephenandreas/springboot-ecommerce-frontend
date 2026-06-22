@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart-context";
+import { AuthProvider } from "@/lib/auth-context";
 import { ProductCard } from "./product-card";
 import type { Product } from "@/types";
 
@@ -23,10 +24,12 @@ const product: Product = {
 
 function renderCard(p: Product = product) {
   return render(
-    <CartProvider>
-      <ProductCard product={p} />
-      <Toaster />
-    </CartProvider>,
+    <AuthProvider>
+      <CartProvider>
+        <ProductCard product={p} />
+        <Toaster />
+      </CartProvider>
+    </AuthProvider>,
   );
 }
 

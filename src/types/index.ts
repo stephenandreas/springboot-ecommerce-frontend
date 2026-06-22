@@ -164,6 +164,31 @@ export interface Order {
   createdAt?: string;
 }
 
+export interface UserProfile {
+  id: string;
+  email: string;
+  fullName: string;
+  phone?: string | null;
+  avatarUrl?: string | null;
+  role: string;
+  emailVerified: boolean;
+}
+
+export interface Address {
+  id: string;
+  label?: string | null;
+  recipientName: string;
+  phone: string;
+  street: string;
+  city: string;
+  province: string;
+  postalCode: string;
+  subdistrict?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  isDefault: boolean;
+}
+
 export type Role = "ROLE_CUSTOMER" | "ROLE_SELLER" | "ROLE_ADMIN";
 
 export interface AuthTokens {

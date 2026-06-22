@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShoppingBag, Search, User, LogOut, LayoutDashboard, Package, Store } from "lucide-react";
+import { ShoppingBag, Search, User, LogOut, LayoutDashboard, Package, Store, Heart, Settings } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,8 +75,18 @@ export function SiteHeader() {
                 <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">{email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
+                  <Link href="/account">
+                    <Settings className="size-4" /> Akun Saya
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link href="/orders">
                     <Package className="size-4" /> Pesanan
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/wishlist">
+                    <Heart className="size-4" /> Wishlist
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>

@@ -7,10 +7,13 @@ import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 import { useCart, type CartLine } from "@/lib/cart-context";
+import { useAuth } from "@/lib/auth-context";
+import { toggleWishlist } from "@/lib/account";
 
 /** Minimal hover actions on a ProductCard — wishlist + instant add-to-cart (optimistic). */
 export function ProductCardActions({ line, disabled }: { line: Omit<CartLine, "quantity">; disabled?: boolean }) {
   const { add } = useCart();
+  const { token } = useAuth();
   const [added, setAdded] = useState(false);
   const [wished, setWished] = useState(false);
 
@@ -19,15 +22,28 @@ export function ProductCardActions({ line, disabled }: { line: Omit<CartLine, "q
     e.stopPropagation();
   }
 
+  async function onWish(e: React.MouseEvent) {
+    stop(e);
+    const next = !wished;
+    setWished(next);
+    if (token) {
+      try {
+        await toggleWishlist(line.productId, token);
+      } catch {
+        setWished(!next);
+        toast.error("Gagal memperbarui wishlist");
+      }
+    } else {
+      toast.info("Masuk untuk menyimpan ke wishlist");
+    }
+  }
+
   return (
     <>
       <button
         type="button"
         aria-label={wished ? "Hapus dari wishlist" : "Simpan"}
-        onClick={(e) => {
-          stop(e);
-          setWished((w) => !w);
-        }}
+        onClick={onWish}
         className="absolute right-3 top-3 grid size-9 place-items-center rounded-full bg-background/80 text-foreground backdrop-blur transition-colors hover:bg-background"
       >
         <Heart className={cn("size-4", wished && "fill-sale text-sale")} />
