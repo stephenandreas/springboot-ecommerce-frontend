@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { formatIDR, lowestPrice } from "./format";
+import { formatIDR, lowestPrice, effectivePrice, skuPricing } from "./format";
+import type { ProductSku } from "@/types";
+
+const sku = (over: Partial<ProductSku>): ProductSku => ({
+  skuId: "s", name: "x", price: 100000, stock: 5, ...over,
+});
 
 describe("formatIDR", () => {
   it("formats a number as IDR without decimals", () => {
@@ -26,5 +31,31 @@ describe("lowestPrice", () => {
   });
   it("returns 0 for an empty list", () => {
     expect(lowestPrice([])).toBe(0);
+  });
+});
+
+describe("effectivePrice", () => {
+  it("uses the backend effectivePrice when present", () => {
+    expect(effectivePrice(sku({ price: 100000, effectivePrice: 80000 }))).toBe(80000);
+  });
+  it("falls back to the list price", () => {
+    expect(effectivePrice(sku({ price: 100000 }))).toBe(100000);
+  });
+});
+
+describe("skuPricing", () => {
+  it("returns no original when nothing is discounted", () => {
+    expect(skuPricing([sku({ price: 100000 })])).toEqual({ price: 100000, original: null });
+  });
+
+  it("exposes the struck-through original for a discounted sku", () => {
+    const s = sku({ price: 100000, effectivePrice: 75000, discountActive: true });
+    expect(skuPricing([s])).toEqual({ price: 75000, original: 100000 });
+  });
+
+  it("picks the cheapest effective price across skus", () => {
+    const a = sku({ skuId: "a", price: 100000 });
+    const b = sku({ skuId: "b", price: 120000, effectivePrice: 60000, discountActive: true });
+    expect(skuPricing([a, b])).toEqual({ price: 60000, original: 120000 });
   });
 });

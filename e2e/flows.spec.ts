@@ -21,6 +21,13 @@ test.describe("Browsing (publik, server-rendered)", () => {
     await expect(page.getByText("Kaos E2E Premium").first()).toBeVisible();
   });
 
+  test("flash sale tampil dengan badge diskon", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("heading", { name: "Flash Sale" })).toBeVisible();
+    await expect(page.getByText("Flash Deal E2E").first()).toBeVisible();
+    await expect(page.getByText("-40%").first()).toBeVisible();
+  });
+
   test("detail produk menampilkan harga + CTA", async ({ page }) => {
     await page.goto("/products/kaos-e2e-premium");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Kaos E2E Premium");

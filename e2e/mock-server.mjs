@@ -22,7 +22,13 @@ const PRODUCT = {
   brand: "E2E", images: [], skus: [SKU], attributes: { Bahan: "Katun" },
   status: "ACTIVE", rating: 4.5, reviewCount: 8,
 };
-const PRODUCTS = [PRODUCT, { ...PRODUCT, id: "p2", name: "Topi E2E", slug: "topi-e2e" }];
+const FLASH = {
+  ...PRODUCT, id: "p3", name: "Flash Deal E2E", slug: "flash-deal-e2e",
+  skus: [{ skuId: "s3", name: "Default", price: 200000, stock: 10, weight: 500,
+    discountPrice: 120000, discountActive: true, effectivePrice: 120000,
+    discountStartsAt: "2020-01-01T00:00:00Z", discountEndsAt: "2099-01-01T00:00:00Z" }],
+};
+const PRODUCTS = [PRODUCT, { ...PRODUCT, id: "p2", name: "Topi E2E", slug: "topi-e2e" }, FLASH];
 const paged = (content) => ok({ content, page: 0, size: content.length, totalElements: content.length, totalPages: 1, last: true });
 
 const ORDER = {
@@ -45,6 +51,7 @@ createServer(async (req, res) => {
   if (path === "/categories") return send(res, 200, ok(CATEGORIES));
   if (path === "/categories/tree") return send(res, 200, ok(CATEGORIES));
   if (path === "/products") return send(res, 200, paged(PRODUCTS));
+  if (path === "/products/flash-sale") return send(res, 200, ok([FLASH]));
   if (path === "/products/search") return send(res, 200, paged(PRODUCTS));
   if (path.startsWith("/products/") && path.endsWith("/products")) return send(res, 200, paged(PRODUCTS));
   if (path.startsWith("/categories/") && path.endsWith("/products")) return send(res, 200, paged(PRODUCTS));

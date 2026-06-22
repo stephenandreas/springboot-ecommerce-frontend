@@ -5,14 +5,15 @@ import Link from "next/link";
 import { ImageOff } from "lucide-react";
 import { motion } from "motion/react";
 
-import { formatIDR, lowestPrice } from "@/lib/format";
+import { effectivePrice, skuPricing } from "@/lib/format";
+import { PriceTag } from "@/components/price-tag";
 import { ProductCardActions } from "@/components/product-card-actions";
 import type { Product } from "@/types";
 
 export function ProductCard({ product, storeName }: { product: Product; storeName?: string }) {
   const skus = product.skus ?? [];
-  const price = lowestPrice(skus.map((s) => Number(s.price)));
-  const sku = skus.find((s) => Number(s.price) === price) ?? skus[0];
+  const { price, original } = skuPricing(skus);
+  const sku = skus.reduce((a, b) => (effectivePrice(b) < effectivePrice(a) ? b : a), skus[0]);
   const totalStock = skus.reduce((n, s) => n + (s.stock ?? 0), 0);
   const image = product.images?.[0]?.url ?? sku?.imageUrl ?? null;
   const outOfStock = totalStock === 0;
@@ -33,6 +34,11 @@ export function ProductCard({ product, storeName }: { product: Product; storeNam
           {outOfStock && (
             <span className="absolute left-3 top-3 bg-background px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide">Habis</span>
           )}
+          {original && !outOfStock && (
+            <span className="absolute left-3 top-3 bg-sale px-2 py-0.5 text-[11px] font-bold text-sale-foreground tabular-nums">
+              -{Math.round(((original - price) / original) * 100)}%
+            </span>
+          )}
           {sku && !outOfStock && (
             <ProductCardActions
               line={{
@@ -41,7 +47,7 @@ export function ProductCard({ product, storeName }: { product: Product; storeNam
                 skuId: sku.skuId,
                 productName: product.name,
                 skuName: sku.name,
-                unitPrice: Number(sku.price),
+                unitPrice: effectivePrice(sku),
                 imageUrl: image,
                 storeId: product.storeId,
                 storeName: storeName ?? "Toko",
@@ -51,10 +57,10 @@ export function ProductCard({ product, storeName }: { product: Product; storeNam
         </div>
       </motion.div>
 
-      <div className="space-y-0.5 pt-3">
+      <div className="space-y-1 pt-3">
         {product.brand && <p className="text-xs text-muted-foreground">{product.brand}</p>}
         <h3 className="line-clamp-1 text-sm font-medium group-hover:underline">{product.name}</h3>
-        <p className="text-sm font-semibold">{formatIDR(price)}</p>
+        <PriceTag price={price} original={original} size="sm" />
       </div>
     </Link>
   );

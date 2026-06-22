@@ -2,21 +2,25 @@
 
 import { useEffect, useState } from "react";
 
-/** Counts down to `target` (epoch ms). Renders HH:MM:SS chips. Loops to a fresh window when elapsed. */
-export function CountdownTimer({ windowHours = 4 }: { windowHours?: number }) {
+/**
+ * Renders an HH:MM:SS countdown. Pass `target` (ISO timestamp) to count down to a real
+ * deadline (e.g. a flash sale's discountEndsAt); otherwise it loops a rolling `windowHours`.
+ */
+export function CountdownTimer({ windowHours = 4, target }: { windowHours?: number; target?: string | null }) {
   const [remaining, setRemaining] = useState<number | null>(null);
 
   useEffect(() => {
     const span = windowHours * 3600_000;
+    const targetMs = target ? new Date(target).getTime() : null;
     const tick = () => {
       const now = Date.now();
-      const end = Math.ceil(now / span) * span; // next window boundary
-      setRemaining(end - now);
+      const end = targetMs ?? Math.ceil(now / span) * span; // fixed deadline or next rolling window
+      setRemaining(Math.max(0, end - now));
     };
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [windowHours]);
+  }, [windowHours, target]);
 
   const total = Math.max(0, Math.floor((remaining ?? 0) / 1000));
   const hh = String(Math.floor(total / 3600)).padStart(2, "0");

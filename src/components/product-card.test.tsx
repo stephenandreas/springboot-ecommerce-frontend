@@ -54,4 +54,23 @@ describe("ProductCard", () => {
     expect(screen.getByText("Habis")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Tambah ke keranjang" })).not.toBeInTheDocument();
   });
+
+  it("shows the discount badge and struck-through list price when on sale", () => {
+    renderCard({
+      ...product,
+      skus: [{ skuId: "s1", name: "M", price: 100000, stock: 10, effectivePrice: 75000, discountActive: true }],
+    });
+    expect(screen.getAllByText("-25%").length).toBeGreaterThan(0);
+    expect(screen.getByText(/75\.000/)).toBeInTheDocument();
+    expect(screen.getByText(/100\.000/)).toHaveClass("line-through");
+  });
+
+  it("quick-adds the discounted (effective) price to the cart", async () => {
+    renderCard({
+      ...product,
+      skus: [{ skuId: "s1", name: "M", price: 100000, stock: 10, effectivePrice: 75000, discountActive: true }],
+    });
+    await userEvent.click(screen.getByRole("button", { name: "Tambah ke keranjang" }));
+    expect(localStorage.getItem("sc_cart")).toContain("75000");
+  });
 });

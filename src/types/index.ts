@@ -21,10 +21,16 @@ export interface ProductSku {
   skuId: string;
   name: string;
   variantAttributes?: Record<string, string>;
-  price: number;
+  price: number; // list price
   stock: number;
   imageUrl?: string | null;
   weight?: number | null;
+  // Non-voucher discount (computed/serialised by the backend).
+  discountPrice?: number | null;
+  discountActive?: boolean;
+  effectivePrice?: number; // price the buyer pays now (discounted when active)
+  discountStartsAt?: string | null;
+  discountEndsAt?: string | null;
 }
 
 export interface ProductImage {

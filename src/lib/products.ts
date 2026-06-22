@@ -37,6 +37,15 @@ export async function searchProducts(q: string, page = 0, size = 20): Promise<Pa
   }
 }
 
+/** Active products with a live SKU discount (flash sale). Empty on failure. */
+export async function getFlashSaleProducts(limit = 12): Promise<Product[]> {
+  try {
+    return await apiFetch<Product[]>(`/products/flash-sale?limit=${limit}`);
+  } catch {
+    return [];
+  }
+}
+
 export async function getProductsByCategory(slug: string, page = 0, size = 20): Promise<PagedResponse<Product>> {
   const params = new URLSearchParams({ page: String(page), size: String(size) });
   try {

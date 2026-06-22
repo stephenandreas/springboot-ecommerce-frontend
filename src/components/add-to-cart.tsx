@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { PriceTag } from "@/components/price-tag";
+import { effectivePrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/lib/cart-context";
 import type { Product } from "@/types";
@@ -29,7 +30,7 @@ export function AddToCart({ product, storeName }: { product: Product; storeName?
       skuId: sku.skuId,
       productName: product.name,
       skuName: sku.name,
-      unitPrice: Number(sku.price),
+      unitPrice: effectivePrice(sku),
       imageUrl: product.images?.[0]?.url ?? sku.imageUrl ?? null,
       storeId: product.storeId,
       storeName: storeName ?? "Toko",
@@ -48,7 +49,11 @@ export function AddToCart({ product, storeName }: { product: Product; storeName?
 
   return (
     <div>
-      <PriceTag price={Number(sku?.price ?? 0)} size="lg" />
+      <PriceTag
+        price={sku ? effectivePrice(sku) : 0}
+        original={sku?.discountActive ? Number(sku.price) : null}
+        size="lg"
+      />
 
       {skus.length > 1 && (
         <div className="mt-5">

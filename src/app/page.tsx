@@ -3,19 +3,52 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { ProductCard } from "@/components/product-card";
 import { EmptyState } from "@/components/empty-state";
+import { CountdownTimer } from "@/components/countdown-timer";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
-import { getProducts } from "@/lib/products";
+import { getProducts, getFlashSaleProducts } from "@/lib/products";
 import { getCategories } from "@/lib/categories";
 import type { Category, Product } from "@/types";
 
+function soonestDiscountEnd(products: Product[]): string | null {
+  const ends = products
+    .flatMap((p) => p.skus ?? [])
+    .filter((s) => s.discountActive && s.discountEndsAt)
+    .map((s) => s.discountEndsAt as string);
+  return ends.length ? ends.sort()[0] : null;
+}
+
 export default async function HomePage() {
-  const [page, categories] = await Promise.all([getProducts({ size: 30 }), getCategories()]);
+  const [page, categories, flash] = await Promise.all([
+    getProducts({ size: 30 }),
+    getCategories(),
+    getFlashSaleProducts(12),
+  ]);
   const products = page.content;
+  const flashEnd = soonestDiscountEnd(flash);
 
   return (
     <div>
       <Hero />
       <Marquee />
+
+      {flash.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-12">
+          <Reveal>
+            <div className="mb-6 flex flex-wrap items-center gap-4">
+              <h2 className="text-2xl font-black uppercase tracking-tight text-sale">Flash Sale</h2>
+              <CountdownTimer target={flashEnd} />
+              <span className="text-sm text-muted-foreground">Buruan sebelum kehabisan</span>
+            </div>
+          </Reveal>
+          <div className="no-scrollbar -mx-1 flex gap-4 overflow-x-auto px-1 pb-1">
+            {flash.map((p) => (
+              <div key={p.id} className="w-44 shrink-0 sm:w-52">
+                <ProductCard product={p} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {categories.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 py-12">
