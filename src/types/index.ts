@@ -43,6 +43,7 @@ export interface Product {
   brand?: string | null;
   images?: ProductImage[] | null;
   skus: ProductSku[];
+  attributes?: Record<string, unknown> | null;
   status: string;
   rating: number;
   reviewCount: number;

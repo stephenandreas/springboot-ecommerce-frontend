@@ -6,12 +6,12 @@ import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { formatIDR } from "@/lib/format";
+import { PriceTag } from "@/components/price-tag";
+import { cn } from "@/lib/utils";
 import { useCart } from "@/lib/cart-context";
 import type { Product } from "@/types";
 
-export function AddToCart({ product }: { product: Product }) {
+export function AddToCart({ product, storeName }: { product: Product; storeName?: string }) {
   const router = useRouter();
   const { add } = useCart();
   const skus = product.skus ?? [];
@@ -32,7 +32,7 @@ export function AddToCart({ product }: { product: Product }) {
       unitPrice: Number(sku.price),
       imageUrl: product.images?.[0]?.url ?? sku.imageUrl ?? null,
       storeId: product.storeId,
-      storeName: "Toko",
+      storeName: storeName ?? "Toko",
     };
   }
 
@@ -47,58 +47,65 @@ export function AddToCart({ product }: { product: Product }) {
   }
 
   return (
-    <div className="rounded-xl border p-5">
-      <p className="text-2xl font-bold">{formatIDR(Number(sku?.price ?? 0))}</p>
+    <div className="rounded-xl border bg-card p-5">
+      <PriceTag price={Number(sku?.price ?? 0)} size="lg" />
 
       {skus.length > 1 && (
-        <div className="mt-4">
-          <p className="mb-2 text-sm font-medium">Varian</p>
+        <div className="mt-5">
+          <p className="mb-2 text-sm font-medium">Pilih Varian</p>
           <div className="flex flex-wrap gap-2">
-            {skus.map((s) => (
-              <Button
-                key={s.skuId}
-                type="button"
-                size="sm"
-                variant={s.skuId === skuId ? "default" : "outline"}
-                onClick={() => {
-                  setSkuId(s.skuId);
-                  setQty(1);
-                }}
-              >
-                {s.name}
-              </Button>
-            ))}
+            {skus.map((s) => {
+              const selected = s.skuId === skuId;
+              const oos = (s.stock ?? 0) <= 0;
+              return (
+                <button
+                  key={s.skuId}
+                  type="button"
+                  disabled={oos}
+                  onClick={() => {
+                    setSkuId(s.skuId);
+                    setQty(1);
+                  }}
+                  className={cn(
+                    "rounded-lg border px-3 py-1.5 text-sm transition-colors",
+                    selected ? "border-primary bg-primary/5 font-medium text-primary" : "hover:border-foreground/40",
+                    oos && "cursor-not-allowed opacity-40 line-through",
+                  )}
+                >
+                  {s.name}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
 
-      <div className="mt-4">
+      <div className="mt-5">
         <p className="mb-2 text-sm font-medium">Jumlah</p>
         <div className="flex items-center gap-3">
-          <div className="inline-flex items-center rounded-md border">
-            <Button type="button" variant="ghost" size="icon" className="size-9" onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={qty <= 1} aria-label="Kurangi">
+          <div className="inline-flex items-center rounded-lg border">
+            <Button type="button" variant="ghost" size="icon" className="size-9 rounded-r-none" onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={qty <= 1} aria-label="Kurangi">
               <Minus className="size-4" />
             </Button>
-            <span className="w-10 text-center text-sm tabular-nums">{qty}</span>
-            <Button type="button" variant="ghost" size="icon" className="size-9" onClick={() => setQty((q) => Math.min(maxQty, q + 1))} disabled={qty >= maxQty} aria-label="Tambah">
+            <span className="w-12 text-center text-sm font-medium tabular-nums">{qty}</span>
+            <Button type="button" variant="ghost" size="icon" className="size-9 rounded-l-none" onClick={() => setQty((q) => Math.min(maxQty, q + 1))} disabled={qty >= maxQty} aria-label="Tambah">
               <Plus className="size-4" />
             </Button>
           </div>
-          <span className="text-sm text-muted-foreground">{maxQty} tersedia</span>
+          <span className={cn("text-sm", maxQty <= 5 && maxQty > 0 ? "font-medium text-warning" : "text-muted-foreground")}>
+            {outOfStock ? "Stok habis" : `${maxQty} tersedia`}
+          </span>
         </div>
       </div>
 
-      <Separator className="my-5" />
-
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <Button variant="outline" className="flex-1" onClick={addToCart} disabled={outOfStock}>
+      <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+        <Button variant="outline" size="lg" className="flex-1 border-primary text-primary hover:bg-primary/5" onClick={addToCart} disabled={outOfStock}>
           <ShoppingCart className="size-4" /> Keranjang
         </Button>
-        <Button className="flex-1" onClick={buyNow} disabled={outOfStock}>
+        <Button size="lg" className="flex-1" onClick={buyNow} disabled={outOfStock}>
           Beli Sekarang
         </Button>
       </div>
-      {outOfStock && <p className="mt-3 text-center text-sm text-destructive">Stok habis</p>}
     </div>
   );
 }

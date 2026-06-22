@@ -5,6 +5,7 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { MobileNav } from "@/components/mobile-nav";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -30,8 +31,9 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col">
         <Providers>
           <SiteHeader />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 pb-16 md:pb-0">{children}</main>
           <SiteFooter />
+          <MobileNav />
         </Providers>
       </body>
     </html>

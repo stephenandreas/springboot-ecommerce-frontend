@@ -36,4 +36,27 @@ npm run lint
 npx shadcn@latest add <component>
 ```
 
-Before committing UI work, run `npm run build` and `npm run lint`; both must pass. See [ecommerce-ui-ux] for component/layout patterns.
+## shadcn = Base UI (NOT Radix) — critical
+
+The shadcn components here are built on **`@base-ui/react`**, not Radix. Composition uses the **`render` prop**, not `asChild`/Slot:
+
+```tsx
+// ✅ Base UI
+<Button render={<Link href="/cart" />}>Keranjang</Button>
+<DropdownMenuTrigger render={<Button variant="ghost" />}>…</DropdownMenuTrigger>
+<DropdownMenuItem render={<Link href="/orders" />}>Pesanan</DropdownMenuItem>
+// ❌ asChild does not exist — type error
+```
+Select uses `value` + `onValueChange(value: string | null)` — coerce the null. Add components with `npx shadcn@latest add <name>` (Tailwind v4). When the registry stalls on a component, compose with primitives directly.
+
+## Reusable UI building blocks (single source each)
+
+Keep ONE implementation of each and reuse everywhere: `ProductCard`, `PriceTag`, `StarRating`, `SectionHeader`, `CountdownTimer`, `QuantityStepper`, `Badge` variants, `OrderStatusBadge`, `EmptyState`, skeletons. Domain components live in `src/components/`, primitives in `src/components/ui/`. Never fork a bespoke card/price/rating.
+
+## Performance defaults
+
+- Browsing pages (home, listing, detail, search) = Server Components → zero client JS for content. Only cart/auth/forms/menus are client.
+- `next/image` with correct `sizes` everywhere; `priority` only for the LCP image. Stream slow sections with `<Suspense>` + skeleton.
+- Optimistic UI for cart add/qty (rollback + toast on failure).
+
+Before committing UI work, run `npm run build` and `npm run lint`; both must pass. See [ecommerce-ui-ux] for the full design system and page blueprints.
