@@ -242,6 +242,27 @@ export interface ReturnRequest {
   createdAt?: string;
 }
 
+export interface Conversation {
+  id: string;
+  type?: string;
+  buyerId: string;
+  sellerId: string;
+  storeId?: string | null;
+  productId?: string | null;
+  subOrderId?: string | null;
+  status?: string;
+  lastMessageAt?: string | null;
+}
+
+export interface ChatMessage {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  content: string;
+  type?: string;
+  readAt?: string | null;
+}
+
 export type Role = "ROLE_CUSTOMER" | "ROLE_SELLER" | "ROLE_ADMIN";
 
 export interface AuthTokens {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShoppingBag, Search, User, LogOut, LayoutDashboard, Package, Store, Heart, Settings } from "lucide-react";
+import { ShoppingBag, Search, User, LogOut, LayoutDashboard, Package, Store, Heart, Settings, MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -89,6 +89,11 @@ export function SiteHeader() {
                 <DropdownMenuItem asChild>
                   <Link href="/wishlist">
                     <Heart className="size-4" /> Wishlist
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/chat">
+                    <MessageCircle className="size-4" /> Pesan
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
