@@ -127,3 +127,59 @@ export function uploadStoreBanner(file: File, token: string): Promise<Store> {
   fd.append("file", file);
   return apiUpload<Store>("/stores/me/banner", fd, token);
 }
+
+// ---- Finance ----
+export interface BankAccount {
+  id: string;
+  bankName: string;
+  accountNumber: string;
+  accountHolder: string;
+  isDefault?: boolean;
+}
+export interface Withdrawal {
+  id: string;
+  amount: number;
+  bankName?: string;
+  bankAccount?: string;
+  status: string;
+  createdAt?: string;
+}
+export function requestWithdrawal(input: { amount: number; bankName: string; bankAccount: string }, token: string): Promise<Withdrawal> {
+  return apiFetch<Withdrawal>("/seller/withdrawal", { method: "POST", token, body: input });
+}
+export function getWithdrawals(token: string): Promise<Withdrawal[]> {
+  return apiFetch<Withdrawal[]>("/seller/withdrawals", { token });
+}
+export function getBankAccounts(token: string): Promise<BankAccount[]> {
+  return apiFetch<BankAccount[]>("/seller/bank-accounts", { token });
+}
+export function createBankAccount(input: { bankName: string; accountNumber: string; accountHolder: string }, token: string): Promise<BankAccount> {
+  return apiFetch<BankAccount>("/seller/bank-accounts", { method: "POST", token, body: input });
+}
+export function deleteBankAccount(id: string, token: string): Promise<void> {
+  return apiFetch<void>(`/seller/bank-accounts/${id}`, { method: "DELETE", token });
+}
+export function setDefaultBankAccount(id: string, token: string): Promise<void> {
+  return apiFetch<void>(`/seller/bank-accounts/${id}/default`, { method: "PUT", token });
+}
+
+// ---- Store vouchers ----
+export interface StoreVoucherInput {
+  code: string;
+  type: "PERCENTAGE" | "FIXED";
+  value: number;
+  minOrderAmount?: number;
+  maxDiscount?: number;
+  usageLimit: number;
+  validFrom: string;
+  validUntil: string;
+}
+export function getSellerVouchers(token: string): Promise<import("@/types").Voucher[]> {
+  return apiFetch("/seller/vouchers", { token });
+}
+export function createStoreVoucher(input: StoreVoucherInput, token: string): Promise<import("@/types").Voucher> {
+  return apiFetch("/seller/vouchers", { method: "POST", token, body: input });
+}
+export function deactivateVoucher(id: string, token: string): Promise<void> {
+  return apiFetch<void>(`/seller/vouchers/${id}/deactivate`, { method: "PUT", token });
+}
