@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { NotificationBell } from "@/components/notification-bell";
 import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
 
@@ -48,6 +49,7 @@ export function SiteHeader() {
         </form>
 
         <nav className="flex items-center gap-0.5 sm:ml-0 ml-auto">
+          <NotificationBell />
           <Button variant="ghost" size="icon" aria-label="Cari" className="sm:hidden" asChild>
             <Link href="/search">
               <Search className="size-5" />

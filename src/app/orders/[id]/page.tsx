@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OrderStatusBadge } from "@/components/order-status-badge";
 import { WriteReviewDialog } from "@/components/write-review-dialog";
+import { ReturnDialog } from "@/components/return-dialog";
 import { useAuth } from "@/lib/auth-context";
 import { getOrder, initiatePayment, confirmReceived } from "@/lib/orders";
 import { formatIDR } from "@/lib/format";
@@ -104,9 +105,11 @@ export default function OrderDetailPage() {
                 ))}
               </ul>
               <Separator className="my-3" />
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Ongkir</span>
-                <span>{formatIDR(sub.shippingCost)}</span>
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>Ongkir {formatIDR(sub.shippingCost)}</span>
+                {order.status === "PAID" && token && (sub.status === "SHIPPED" || sub.status === "PROCESSING") && (
+                  <ReturnDialog orderId={order.id} subOrderId={sub.id} token={token} />
+                )}
               </div>
             </CardContent>
           </Card>

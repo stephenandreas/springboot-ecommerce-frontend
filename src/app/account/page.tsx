@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User, Camera, MapPin, Heart, Package, BadgeCheck } from "lucide-react";
+import { User, Camera, MapPin, Heart, Package, BadgeCheck, Bell, Undo2, Ticket } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -110,6 +110,9 @@ export default function AccountPage() {
         <QuickLink href="/orders" icon={Package} label="Pesanan" />
         <QuickLink href="/account/addresses" icon={MapPin} label="Alamat" />
         <QuickLink href="/wishlist" icon={Heart} label="Wishlist" />
+        <QuickLink href="/notifications" icon={Bell} label="Notifikasi" />
+        <QuickLink href="/account/returns" icon={Undo2} label="Retur" />
+        <QuickLink href="/vouchers" icon={Ticket} label="Voucher" />
       </div>
 
       {/* Edit profile */}

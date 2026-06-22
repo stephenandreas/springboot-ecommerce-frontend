@@ -220,6 +220,28 @@ export interface Voucher {
   validUntil?: string | null;
 }
 
+export interface AppNotification {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  referenceId?: string | null;
+  referenceType?: string | null;
+  read: boolean;
+}
+
+export interface ReturnRequest {
+  id: string;
+  orderId: string;
+  subOrderId: string;
+  buyerId: string;
+  reason: string;
+  status: string;
+  refundAmount?: number | null;
+  adminNotes?: string | null;
+  createdAt?: string;
+}
+
 export type Role = "ROLE_CUSTOMER" | "ROLE_SELLER" | "ROLE_ADMIN";
 
 export interface AuthTokens {
