@@ -36,18 +36,19 @@ npm run lint
 npx shadcn@latest add <component>
 ```
 
-## shadcn = Base UI (NOT Radix) — critical
+## shadcn = Radix UI — composition with `asChild`
 
-The shadcn components here are built on **`@base-ui/react`**, not Radix. Composition uses the **`render` prop**, not `asChild`/Slot:
+The shadcn components here are the classic **Radix UI** variant (`radix-ui` package, `style: "new-york"` in components.json). Polymorphism uses **`asChild`** + a single child (Slot), NOT a `render` prop:
 
 ```tsx
-// ✅ Base UI
-<Button render={<Link href="/cart" />}>Keranjang</Button>
-<DropdownMenuTrigger render={<Button variant="ghost" />}>…</DropdownMenuTrigger>
-<DropdownMenuItem render={<Link href="/orders" />}>Pesanan</DropdownMenuItem>
-// ❌ asChild does not exist — type error
+// ✅ Radix
+<Button asChild><Link href="/cart">Keranjang</Link></Button>
+<DropdownMenuTrigger asChild><Button variant="ghost">…</Button></DropdownMenuTrigger>
+<DropdownMenuItem asChild><Link href="/orders">Pesanan</Link></DropdownMenuItem>
 ```
-Select uses `value` + `onValueChange(value: string | null)` — coerce the null. Add components with `npx shadcn@latest add <name>` (Tailwind v4). When the registry stalls on a component, compose with primitives directly.
+History: the project was scaffolded with the Base UI variant (`base-nova` style, `render` prop) which had API gotchas (e.g. `DropdownMenuLabel` crashing without a `<DropdownMenuGroup>` wrapper). It was migrated to Radix — switch `components.json` `style` to `new-york`, `shadcn add --overwrite` every component, then convert `render={<X/>}` → `asChild`. Select uses `value` + `onValueChange(value: string)`. Add components with `npx shadcn@latest add <name>` (Tailwind v4).
+
+**Always test interactive overlay components (DropdownMenu, Dialog, Sheet, Select, Tabs) with a jsdom interaction test** — Playwright can't launch a browser in this sandbox, so a render-and-open test is the only guard against "context missing"-class runtime crashes.
 
 ## Reusable UI building blocks (single source each)
 

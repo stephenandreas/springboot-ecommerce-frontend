@@ -23,7 +23,9 @@ export default function CartPage() {
           title="Keranjang kosong"
           description="Yuk jelajahi produk dan tambahkan ke keranjang."
           action={
-            <Button render={<Link href="/" />}>Mulai Belanja</Button>
+            <Button asChild>
+              <Link href="/">Mulai Belanja</Link>
+            </Button>
           }
         />
       </div>
@@ -93,8 +95,8 @@ export default function CartPage() {
               </div>
               <p className="text-xs text-muted-foreground">Ongkir dihitung saat checkout oleh server.</p>
               <Separator />
-              <Button className="w-full" render={<Link href="/checkout" />}>
-                Checkout
+              <Button className="w-full" asChild>
+                <Link href="/checkout">Checkout</Link>
               </Button>
             </CardContent>
           </Card>

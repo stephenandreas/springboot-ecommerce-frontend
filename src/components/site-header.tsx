@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -49,34 +48,42 @@ export function SiteHeader() {
         </form>
 
         <nav className="flex items-center gap-0.5 sm:ml-0 ml-auto">
-          <Button variant="ghost" size="icon" aria-label="Cari" className="sm:hidden" render={<Link href="/search" />}>
-            <Search className="size-5" />
+          <Button variant="ghost" size="icon" aria-label="Cari" className="sm:hidden" asChild>
+            <Link href="/search">
+              <Search className="size-5" />
+            </Link>
           </Button>
-          <Button variant="ghost" size="icon" aria-label="Keranjang" className="relative" render={<Link href="/cart" />}>
-            <ShoppingBag className="size-5" />
-            {count > 0 && (
-              <span className="absolute right-1 top-1 grid size-4 place-items-center rounded-full bg-primary text-[9px] font-semibold text-primary-foreground tabular-nums">
-                {count > 9 ? "9" : count}
-              </span>
-            )}
+          <Button variant="ghost" size="icon" aria-label="Keranjang" className="relative" asChild>
+            <Link href="/cart">
+              <ShoppingBag className="size-5" />
+              {count > 0 && (
+                <span className="absolute right-1 top-1 grid size-4 place-items-center rounded-full bg-primary text-[9px] font-semibold text-primary-foreground tabular-nums">
+                  {count > 9 ? "9" : count}
+                </span>
+              )}
+            </Link>
           </Button>
 
           {token ? (
             <DropdownMenu>
-              <DropdownMenuTrigger render={<Button variant="ghost" size="icon" aria-label="Akun" />}>
-                <User className="size-5" />
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" aria-label="Akun">
+                  <User className="size-5" />
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">{email}</DropdownMenuLabel>
-                </DropdownMenuGroup>
+                <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">{email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem render={<Link href="/orders" />}>
-                  <Package className="size-4" /> Pesanan
+                <DropdownMenuItem asChild>
+                  <Link href="/orders">
+                    <Package className="size-4" /> Pesanan
+                  </Link>
                 </DropdownMenuItem>
                 {(role === "ROLE_SELLER" || role === "ROLE_ADMIN") && (
-                  <DropdownMenuItem render={<Link href="/seller" />}>
-                    <LayoutDashboard className="size-4" /> Dashboard
+                  <DropdownMenuItem asChild>
+                    <Link href="/seller">
+                      <LayoutDashboard className="size-4" /> Dashboard
+                    </Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
@@ -86,8 +93,10 @@ export function SiteHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button variant="ghost" size="icon" aria-label="Masuk" render={<Link href="/login" />}>
-              <User className="size-5" />
+            <Button variant="ghost" size="icon" aria-label="Masuk" asChild>
+              <Link href="/login">
+                <User className="size-5" />
+              </Link>
             </Button>
           )}
         </nav>

@@ -43,7 +43,11 @@ export default function OrdersPage() {
             icon={Package}
             title="Belum ada pesanan"
             description="Pesanan yang Anda buat akan muncul di sini."
-            action={<Button render={<Link href="/" />}>Mulai Belanja</Button>}
+            action={
+              <Button asChild>
+                <Link href="/">Mulai Belanja</Link>
+              </Button>
+            }
           />
         ) : (
           orders.map((o) => (
