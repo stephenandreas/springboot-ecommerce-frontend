@@ -99,7 +99,14 @@ export function SiteHeader() {
                 {(role === "ROLE_SELLER" || role === "ROLE_ADMIN") && (
                   <DropdownMenuItem asChild>
                     <Link href="/seller">
-                      <LayoutDashboard className="size-4" /> Dashboard
+                      <LayoutDashboard className="size-4" /> Dashboard Penjual
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {role === "ROLE_ADMIN" && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin">
+                      <LayoutDashboard className="size-4" /> Panel Admin
                     </Link>
                   </DropdownMenuItem>
                 )}
